@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
+const path = require('path');
 
 const presetHandler = require('./presetHandler');
 
@@ -15,26 +16,35 @@ app.use(morgan('dev'));
 // Body-parsing middleware
 app.use(bodyParser.json());
 
-app.use(express.static('public'));
+// Serve static files from the root directory
+app.use(express.static(__dirname));
+
+// Also explicitly map /public to the public folder
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 const presets = require('./presets');
 
-app.get('/presets', (req, res, next) => {
+// Serve index.html for the root route
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/presets', (req, res) => {
   res.send(presets);
 });
 
 // Handle presets requests
-app.use('/presets/:id', (req, res, next) => {
+app.use('/presets/:id', (req, res) => {
   let index = Number(req.params.id);
   let presetArray = req.body;
-  let isValidPreset = presetArray.length === 4
-  && presetArray.every((singleRow) => {
-    return singleRow.length === 16
-    && singleRow.every((singleGridElement) => {
-      return singleGridElement === true || singleGridElement === false;
+  let isValidPreset = presetArray && presetArray.length === 4
+    && presetArray.every((singleRow) => {
+      return singleRow.length === 16
+        && singleRow.every((singleGridElement) => {
+          return singleGridElement === true || singleGridElement === false;
+        });
     });
-  });
-  if (app.method === 'PUT' && !isValidPreset) {
+  if (req.method === 'PUT' && !isValidPreset) {
     res.status(400).send('Bad Request, send a preset array!');
   } else {
     let method = req.method;
@@ -43,27 +53,8 @@ app.use('/presets/:id', (req, res, next) => {
   }
 });
 
-app.listen(4001, () => {
-  console.log('Server listening on port 4001');
+// Use the PORT environment variable
+const PORT = process.env.PORT || 4001;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
-
-// Hooks to handle saving presets on app exit
-process.stdin.resume();
-const exitHandler = (options, err) => {
-  if (err) {
-    console.log(err.stack);
-  }
-  if (options.exit) {
-    const fs = require('fs');
-    const presets = require('./presets');
-    const savedPresets = {data: presets};
-    fs.writeFileSync('presets.json', JSON.stringify(savedPresets));
-    process.exit();
-  };
-};
-
-// Catches Ctrl+C event
-process.on('SIGINT', exitHandler.bind(null, {exit: true}));
-
-// Catches Uncaught Exceptions
-process.on('uncaughtException', exitHandler.bind(null, {exit: true}));

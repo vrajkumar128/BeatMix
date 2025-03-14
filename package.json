@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.2",
+    "build-apis-beat-mix": "file:",
     "chai": "^4.1.1",
     "chai-things": "^0.2.0",
     "cors": "^2.8.4",

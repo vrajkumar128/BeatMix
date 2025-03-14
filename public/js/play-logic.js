@@ -101,7 +101,7 @@ const savePreset = () => {
   flags['#save-preset'] = true;
   const arr = [kicks, snares, hiHats, rideCymbals];
   $.ajax({
-    url: `http://localhost:4001/presets/${activePreset}`,
+    url: `/presets/${activePreset}`,
     dataType: 'json',
     contentType: 'application/json',
     type: 'PUT',
@@ -338,7 +338,7 @@ $(() => {
     const id = $this.attr('id').slice(7);
     activePreset = id;
     $.ajax({
-      url: `http://localhost:4001/presets/${id}`,
+      url: `/presets/${id}`,
       type: 'GET'
     })
     .done((results) => {

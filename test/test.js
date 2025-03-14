@@ -39,7 +39,7 @@ describe('Beat Mix Problem Set - script.js file', () => {
   });
 
   describe('Drum Arrays', () => {
-
+    
     it('a variable called kicks should exist', () => {
       expect(kicks).to.not.be.undefined;
     });
@@ -343,7 +343,7 @@ describe('Preset function - presetHandler.js file', () => {
         expect(presetHandler('GET', 1240)[0]).to.equal(404);
         expect(presetHandler('GET', -1)[0]).to.equal(404);
       });
-
+      
     });
 
     describe('method === \'PUT\'', () => {

@@ -8,10 +8,10 @@ const drumSounds = {
 };
 
 const drumUrls = {
-  kicks: 'http://localhost:4001/audio/kick.wav',
-  snares: 'http://localhost:4001/audio/snare.wav',
-  rideCymbals: 'http://localhost:4001/audio/ride.wav',
-  hiHats: 'http://localhost:4001/audio/hiHat.wav'
+  kicks: '/public/audio/kick.wav',
+  snares: '/public/audio/snare.wav',
+  rideCymbals: '/public/audio/ride.wav',
+  hiHats: '/public/audio/hiHat.wav'
 };
 
 const getDrumAudioData = () => {
@@ -35,7 +35,7 @@ const getDrumAudioData = () => {
 
 getDrumAudioData();
 
-const reverbUrl = 'http://localhost:4001/audio/reverb.wav';
+const reverbUrl = '/public/audio/reverb.wav';
 
 const convolver = audioCtx.createConvolver();
 const reverbGain = audioCtx.createGain();
